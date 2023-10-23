@@ -6,6 +6,7 @@ import "./Ownable.sol";
 uint8 constant ADMINS_LENGTH = 5;
 
 error NotAdmin();
+error InvalidTier();
 
 contract GasContract is Ownable {
     uint256 private totalSupply = 0; // cannot be updated
@@ -74,10 +75,7 @@ contract GasContract is Ownable {
         bool isAdmin = checkForAdmin[senderOfTx];
         if(!isAdmin) revert NotAdmin();
 
-        require(
-            _tier < 255,
-            "InvalidTier"
-        );
+        if(_tier >= 255) revert InvalidTier();
 
         uint256 tier = _tier;
         if(_tier > 3) {
