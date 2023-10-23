@@ -21,8 +21,6 @@ contract GasContract is Ownable {
     mapping(address => ImportantStruct) public whiteListStruct;
 
     event AddedToWhitelist(address userAddress, uint256 tier);
-
-    event Transfer(address recipient, uint256 amount);
     event WhiteListTransfer(address indexed);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
@@ -62,7 +60,6 @@ contract GasContract is Ownable {
         );
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
-        emit Transfer(_recipient, _amount);
     }
 
     function addToWhitelist(address _userAddrs, uint256 _tier)
