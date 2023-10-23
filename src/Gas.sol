@@ -11,7 +11,6 @@ error InvalidTier();
 contract GasContract is Ownable {
     uint256 private totalSupply = 0; // cannot be updated
     mapping(address => uint256) public balances;
-    address public contractOwner;
     mapping(address => uint256) public whitelist;
     address[ADMINS_LENGTH] public administrators;
     mapping(address => bool) private checkForAdmin;
@@ -28,7 +27,7 @@ contract GasContract is Ownable {
     event WhiteListTransfer(address indexed);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
-        contractOwner = msg.sender;
+        address contractOwner = msg.sender;
         totalSupply = _totalSupply;
         balances[contractOwner] = _totalSupply;
         checkForAdmin[contractOwner] = true;
