@@ -25,9 +25,6 @@ contract GasContract is Ownable {
         GroupPayment
     }
     PaymentType constant defaultPayment = PaymentType.Unknown;
-
-    History[] public paymentHistory; // when a payment was updated
-
     struct Payment {
         PaymentType paymentType;
         uint256 paymentID;
@@ -36,12 +33,6 @@ contract GasContract is Ownable {
         address recipient;
         address admin; // administrators address
         uint256 amount;
-    }
-
-    struct History {
-        uint256 lastUpdate;
-        address updatedBy;
-        uint256 blockNumber;
     }
     uint256 wasLastOdd = 1;
     mapping(address => uint256) public isOddWhitelistUser;
@@ -96,34 +87,9 @@ contract GasContract is Ownable {
 
     }
 
-    function getPaymentHistory()
-        public
-        payable
-        returns (History[] memory paymentHistory_)
-    {
-        return paymentHistory;
-    }
-
     function balanceOf(address _user) public view returns (uint256 balance_) {
         uint256 balance = balances[_user];
         return balance;
-    }
-
-
-    function addHistory(address _updateAddress)
-        public
-        returns (bool status_)
-    {
-        History memory history;
-        history.blockNumber = block.number;
-        history.lastUpdate = block.timestamp;
-        history.updatedBy = _updateAddress;
-        paymentHistory.push(history);
-        bool[] memory status = new bool[](tradePercent);
-        for (uint256 i = 0; i < tradePercent; i++) {
-            status[i] = true;
-        }
-        return (status[0] == true);
     }
 
     function getPayments(address _user)
@@ -198,7 +164,6 @@ contract GasContract is Ownable {
                 payments[_user][ii].admin = _user;
                 payments[_user][ii].paymentType = _type;
                 payments[_user][ii].amount = _amount;
-                addHistory(_user);
                 emit PaymentUpdated(
                     senderOfTx,
                     _ID,
