@@ -62,10 +62,6 @@ contract GasContract is Ownable {
             balances[senderOfTx] >= _amount,
             "InsufficientBalance"
         );
-        require(
-            bytes(_name).length < 9,
-            "NameGt8"
-        );
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
         emit Transfer(_recipient, _amount);
