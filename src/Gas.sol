@@ -24,7 +24,6 @@ contract GasContract is Ownable {
 
     event AddedToWhitelist(address userAddress, uint256 tier);
 
-    event supplyChanged(address indexed, uint256 indexed);
     event Transfer(address recipient, uint256 amount);
     event WhiteListTransfer(address indexed);
 
