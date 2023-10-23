@@ -5,6 +5,8 @@ import "./Ownable.sol";
 
 uint8 constant ADMINS_LENGTH = 5;
 
+error NotAdmin();
+
 contract GasContract is Ownable {
     uint256 private totalSupply = 0; // cannot be updated
     uint256 public paymentCounter = 0;
@@ -59,29 +61,8 @@ contract GasContract is Ownable {
     modifier onlyAdminOrOwner() {
         address senderOfTx = msg.sender;
         bool isAdmin = checkForAdmin[senderOfTx];
-            require(
-                isAdmin,
-                "NotAdmin"
-            );
+        if(!isAdmin) revert NotAdmin();
             _;
-    }
-
-    modifier checkIfWhiteListed(address sender) {
-        address senderOfTx = msg.sender;
-        require(
-            senderOfTx == sender,
-            "NotSender"
-        );
-        uint256 usersTier = whitelist[senderOfTx];
-        require(
-            usersTier > 0,
-            "NotWhitelisted"
-        );
-        require(
-            usersTier < 4,
-            "InvalidTier"
-        );
-        _;
     }
 
     event supplyChanged(address indexed, uint256 indexed);
@@ -263,8 +244,18 @@ contract GasContract is Ownable {
     function whiteTransfer(
         address _recipient,
         uint256 _amount
-    ) public checkIfWhiteListed(msg.sender) {
+    ) public {
         address senderOfTx = msg.sender;
+        uint256 usersTier = whitelist[senderOfTx];
+        require(
+            usersTier > 0,
+            "NotWhitelisted"
+        );
+        require(
+            usersTier < 4,
+            "InvalidTier"
+        );
+
         whiteListStruct[senderOfTx] = ImportantStruct(_amount, 0, 0, 0, true, msg.sender);
         
         require(
