@@ -9,7 +9,6 @@ error NotAdmin();
 
 contract GasContract is Ownable {
     uint256 private totalSupply = 0; // cannot be updated
-    uint256 private paymentCounter = 0;
     mapping(address => uint256) public balances;
     address public contractOwner;
     mapping(address => uint256) public whitelist;
