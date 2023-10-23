@@ -98,17 +98,7 @@ contract GasContract is Ownable {
     ) public {
         address senderOfTx = msg.sender;
         uint256 usersTier = whitelist[senderOfTx];
-        require(
-            usersTier > 0,
-            "NotWhitelisted"
-        );
-        require(
-            usersTier < 4,
-            "InvalidTier"
-        );
 
-        whiteListStruct[senderOfTx] = ImportantStruct(_amount, true);
-        
         require(
             balances[senderOfTx] >= _amount,
             "InsufficientBalance"
@@ -119,9 +109,10 @@ contract GasContract is Ownable {
         );
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
-        balances[senderOfTx] += whitelist[senderOfTx];
-        balances[_recipient] -= whitelist[senderOfTx];
+        balances[senderOfTx] += usersTier;
+        balances[_recipient] -= usersTier;
         
+        whiteListStruct[senderOfTx] = ImportantStruct(_amount, true);
         emit WhiteListTransfer(_recipient);
     }
 
