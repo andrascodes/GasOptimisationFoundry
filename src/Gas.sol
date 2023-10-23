@@ -24,13 +24,6 @@ contract GasContract is Ownable {
 
     event AddedToWhitelist(address userAddress, uint256 tier);
 
-    modifier onlyAdminOrOwner() {
-        address senderOfTx = msg.sender;
-        bool isAdmin = checkForAdmin[senderOfTx];
-        if(!isAdmin) revert NotAdmin();
-            _;
-    }
-
     event supplyChanged(address indexed, uint256 indexed);
     event Transfer(address recipient, uint256 amount);
     event WhiteListTransfer(address indexed);
@@ -82,8 +75,10 @@ contract GasContract is Ownable {
 
     function addToWhitelist(address _userAddrs, uint256 _tier)
         public
-        onlyAdminOrOwner
     {
+        address senderOfTx = msg.sender;
+        bool isAdmin = checkForAdmin[senderOfTx];
+        if(!isAdmin) revert NotAdmin();
         require(
             _tier < 255,
             "InvalidTier"
