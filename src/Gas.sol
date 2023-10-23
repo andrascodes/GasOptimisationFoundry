@@ -77,22 +77,18 @@ contract GasContract is Ownable {
         address senderOfTx = msg.sender;
         bool isAdmin = checkForAdmin[senderOfTx];
         if(!isAdmin) revert NotAdmin();
+
         require(
             _tier < 255,
             "InvalidTier"
         );
-        whitelist[_userAddrs] = _tier;
-        if (_tier > 3) {
-            whitelist[_userAddrs] -= _tier;
-            whitelist[_userAddrs] = 3;
-        } else if (_tier == 1) {
-            whitelist[_userAddrs] -= _tier;
-            whitelist[_userAddrs] = 1;
-        } else if (_tier > 0 && _tier < 3) {
-            whitelist[_userAddrs] -= _tier;
-            whitelist[_userAddrs] = 2;
-        }
-      
+
+        uint256 tier = _tier;
+        if(_tier > 3) {
+            tier = 3;
+        } 
+        whitelist[_userAddrs] = tier;
+        
         emit AddedToWhitelist(_userAddrs, _tier);
     }
 
