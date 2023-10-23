@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import "./Ownable.sol";
-
 uint8 constant ADMINS_LENGTH = 5;
 
 error NotAdmin();
 error InvalidTier();
 error InsufficientBalance();
 
-contract GasContract is Ownable {
+contract GasContract {
     mapping(address => uint256) public balances;
     mapping(address => uint256) public whitelist;
     address[ADMINS_LENGTH] public administrators;
