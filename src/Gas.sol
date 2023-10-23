@@ -7,6 +7,7 @@ uint8 constant ADMINS_LENGTH = 5;
 
 error NotAdmin();
 error InvalidTier();
+error InsufficientBalance();
 
 contract GasContract is Ownable {
     mapping(address => uint256) public balances;
@@ -54,10 +55,7 @@ contract GasContract is Ownable {
         string calldata _name
     ) public {
         address senderOfTx = msg.sender;
-        require(
-            balances[senderOfTx] >= _amount,
-            "InsufficientBalance"
-        );
+        if(balances[senderOfTx] < _amount) revert InsufficientBalance();
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
     }
