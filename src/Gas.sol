@@ -16,8 +16,6 @@ contract GasContract is Ownable {
     mapping(address => uint256) public whitelist;
     address[ADMINS_LENGTH] public administrators;
     mapping(address => bool) private checkForAdmin;
-    uint256 wasLastOdd = 1;
-    mapping(address => uint256) public isOddWhitelistUser;
     
     struct ImportantStruct {
         uint256 amount;
@@ -107,16 +105,7 @@ contract GasContract is Ownable {
             whitelist[_userAddrs] -= _tier;
             whitelist[_userAddrs] = 2;
         }
-        uint256 wasLastAddedOdd = wasLastOdd;
-        if (wasLastAddedOdd == 1) {
-            wasLastOdd = 0;
-            isOddWhitelistUser[_userAddrs] = wasLastAddedOdd;
-        } else if (wasLastAddedOdd == 0) {
-            wasLastOdd = 1;
-            isOddWhitelistUser[_userAddrs] = wasLastAddedOdd;
-        } else {
-            revert("Hacked");
-        }
+      
         emit AddedToWhitelist(_userAddrs, _tier);
     }
 
