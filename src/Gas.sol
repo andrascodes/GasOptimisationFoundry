@@ -9,7 +9,6 @@ error NotAdmin();
 error InvalidTier();
 
 contract GasContract is Ownable {
-    uint256 private totalSupply = 0; // cannot be updated
     mapping(address => uint256) public balances;
     mapping(address => uint256) public whitelist;
     address[ADMINS_LENGTH] public administrators;
@@ -28,7 +27,6 @@ contract GasContract is Ownable {
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
         address contractOwner = msg.sender;
-        totalSupply = _totalSupply;
         balances[contractOwner] = _totalSupply;
         checkForAdmin[contractOwner] = true;
         address[ADMINS_LENGTH] memory admins = [
