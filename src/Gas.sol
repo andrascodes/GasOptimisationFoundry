@@ -11,7 +11,6 @@ contract GasContract is Ownable {
     uint256 private totalSupply = 0; // cannot be updated
     uint256 private paymentCounter = 0;
     mapping(address => uint256) public balances;
-    uint256 public tradePercent = 12;
     address public contractOwner;
     mapping(address => uint256) public whitelist;
     address[ADMINS_LENGTH] public administrators;
@@ -66,7 +65,7 @@ contract GasContract is Ownable {
         address _recipient,
         uint256 _amount,
         string calldata _name
-    ) public returns (bool status_) {
+    ) public {
         address senderOfTx = msg.sender;
         require(
             balances[senderOfTx] >= _amount,
@@ -79,11 +78,6 @@ contract GasContract is Ownable {
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
         emit Transfer(_recipient, _amount);
-        bool[] memory status = new bool[](tradePercent);
-        for (uint256 i = 0; i < tradePercent; i++) {
-            status[i] = true;
-        }
-        return (status[0] == true);
     }
 
     function addToWhitelist(address _userAddrs, uint256 _tier)
