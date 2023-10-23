@@ -14,6 +14,7 @@ contract GasContract is Ownable {
     mapping(address => Payment[]) public payments;
     mapping(address => uint256) public whitelist;
     address[ADMINS_LENGTH] public administrators;
+    mapping(address => bool) private checkForAdmin;
     enum PaymentType {
         Unknown,
         BasicPayment,
@@ -57,19 +58,12 @@ contract GasContract is Ownable {
 
     modifier onlyAdminOrOwner() {
         address senderOfTx = msg.sender;
-        if (checkForAdmin(senderOfTx)) {
+        bool isAdmin = checkForAdmin[senderOfTx];
             require(
-                checkForAdmin(senderOfTx),
-                "Gas Contract Only Admin Check-  Caller not admin"
+                isAdmin,
+                "NotAdmin"
             );
             _;
-        } else if (senderOfTx == contractOwner) {
-            _;
-        } else {
-            revert(
-                "Error in Gas contract - onlyAdminOrOwner modifier : revert happened because the originator of the transaction was not the admin, and furthermore he wasn't the owner of the contract, so he cannot run this function"
-            );
-        }
     }
 
     modifier checkIfWhiteListed(address sender) {
@@ -104,6 +98,7 @@ contract GasContract is Ownable {
         contractOwner = msg.sender;
         totalSupply = _totalSupply;
         balances[contractOwner] = _totalSupply;
+        checkForAdmin[contractOwner] = true;
         address[ADMINS_LENGTH] memory admins = [
             _admins[0],
             _admins[1],
@@ -111,6 +106,11 @@ contract GasContract is Ownable {
             _admins[3],
             _admins[4]
         ];
+        checkForAdmin[admins[0]] = true;
+        checkForAdmin[admins[1]] = true;
+        checkForAdmin[admins[2]] = true;
+        checkForAdmin[admins[3]] = true;
+        checkForAdmin[admins[4]] = true;
         administrators = admins;
 
     }
@@ -121,16 +121,6 @@ contract GasContract is Ownable {
         returns (History[] memory paymentHistory_)
     {
         return paymentHistory;
-    }
-
-    function checkForAdmin(address _user) public view returns (bool admin_) {
-        bool admin = false;
-        for (uint256 ii = 0; ii < administrators.length; ii++) {
-            if (administrators[ii] == _user) {
-                admin = true;
-            }
-        }
-        return admin;
     }
 
     function balanceOf(address _user) public view returns (uint256 balance_) {
