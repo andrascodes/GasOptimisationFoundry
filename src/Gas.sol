@@ -10,6 +10,7 @@ error InsufficientBalance();
 contract GasContract {
     mapping(address => uint256) public balances;
     mapping(address => uint256) public whitelist;
+    // is it better to change this to mapping(uint256 -> address)?
     address[ADMINS_LENGTH] public administrators;
     mapping(address => bool) private checkForAdmin;
     
@@ -50,7 +51,7 @@ contract GasContract {
     function transfer(
         address _recipient,
         uint256 _amount,
-        string calldata _name
+        string calldata
     ) public {
         address senderOfTx = msg.sender;
         if(balances[senderOfTx] < _amount) revert InsufficientBalance();
